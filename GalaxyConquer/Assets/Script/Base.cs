@@ -118,8 +118,7 @@ public class Base : MonoBehaviour
         for(int i = 0; i < unitAmt; i++){
             GameObject deployedUnit = Instantiate(unitPrefab,transform.position, Quaternion.identity);
             
-            deployedUnit.GetComponent<Unit>().setUnit(originalType, destBase,
-            originalMaterial);
+            deployedUnit.GetComponent<Unit>().setUnit(originalType, destBase, originalMaterial);
             yield return new WaitForSeconds(0.3f);
             //current--;
             updatePopulation();
