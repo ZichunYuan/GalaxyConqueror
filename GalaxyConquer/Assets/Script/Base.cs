@@ -10,9 +10,9 @@ public enum Type{
     }
 public class Base : MonoBehaviour
 {
-    int max;
-    int current;
-    int growSpeed;
+    private int max;
+    private int current;
+    private int growSpeed;
 
     public GameObject unitPrefab; 
 
@@ -29,56 +29,63 @@ public class Base : MonoBehaviour
     //     PLAYER,
     //     ENEMY
     // }
-    public Group baseGroup;
+    public Group baseGroup; //TODO: 种族数据
     public Type type;
 
     public Material[] materials; //Change this later!!! 0 NPC / 1 Player / 2 Enemy
 
+
     // Start is called before the first frame update
     void Start()
     {
-        switch (baseGroup){
-            case Group.HUMAN:
-            {
-                current = 1;
+        // switch (baseGroup){
+        //     case Group.HUMAN:
+        //     {
+        //         current = 20;
+        //         max = 50;
+        //         growSpeed = 1;
+        //     }
+        //     break;
+        //     case Group.ANIMAL:
+        //     {
+        //         current = 10;
+        //         max = 50;
+        //         growSpeed = 0;
+        //     }
+        //     break;
+        //     case Group.SPIRIT:
+        //     {
+        //         current = 10;
+        //         max = 50;
+        //         growSpeed = 0;
+        //     }
+        //     break;
+        // }
+        switch(type){
+            case Type.ENEMY:{
+                current = 10;
                 max = 50;
                 growSpeed = 1;
+            break;  
             }
-            break;
-            case Group.ANIMAL:
-            {
+            case Type.NEUTRAL:{
                 current = 10;
                 max = 50;
                 growSpeed = 0;
+            break;  
             }
-            break;
-            case Group.SPIRIT:
-            {
+            case Type.PLAYER:{
                 current = 10;
                 max = 50;
-                growSpeed = 2;
-            }
+                growSpeed = 1;
             break;
+            }
         }
-        // switch(type){
-        //     case Type.ENEMY:{
-        //     growSpeed = 2;
-        //     break;  
-        //     }
-        //     case Type.NEUTRAL:{
-        //     growSpeed = 0;
-        //     break;  
-        //     }
-        //     case Type.PLAYER:{
-        //     growSpeed = 1;
-        //     break;
-        //     }
-        // }
         updatePopulation();
         StartCoroutine(GrowBySecond());
     }
 
-    void Grow(){
+    private void Grow(){
         //Logic
         if(current <= max) current += growSpeed;
 
@@ -99,16 +106,22 @@ public class Base : MonoBehaviour
     }
 
     
-
+    //TODO: the send units can't go down pass 0!!!!!!!!!!
     IEnumerator SendAllUnits(Base destBase){
+        //NOTE!! BOTH IMPLEMENTATION IS KINDA PROBLEMATIC.
         int unitAmt = current;
+        current = 0;
+
+        Type originalType = type;
+        Material originalMaterial = GetComponent<MeshRenderer>().material;
+
         for(int i = 0; i < unitAmt; i++){
             GameObject deployedUnit = Instantiate(unitPrefab,transform.position, Quaternion.identity);
             
-            deployedUnit.GetComponent<Unit>().setUnit(type, destBase,
-            GetComponent<MeshRenderer>().material);
+            deployedUnit.GetComponent<Unit>().setUnit(originalType, destBase,
+            originalMaterial);
             yield return new WaitForSeconds(0.3f);
-            current--;
+            //current--;
             updatePopulation();
         }
     }
@@ -120,46 +133,53 @@ public class Base : MonoBehaviour
         //     GetComponent<MeshRenderer>().material);
         // }
         // current -= unitAmt;
+        //this.GetComponent<GameObject>().SetActive(true);
         StartCoroutine(SendAllUnits(destBase));
     }
 
-
-        // IEnumerator ReceiveAllUnits(Type t){
-        //     if(t == type){
-        //    Grow(); //Need to change!!!!!!!!!!!!!
-        //    return; 
-        // }else{
-        //     //current --; //CHAGNE!!!!!!!!!!
-        //     DestroyUnit(t);
-        // }
-        // }
-
-
     public void ReceiveUnits(Type t){
         if(t == type){
-           Grow(); //Need to change!!!!!!!!!!!!!
+           Grow(); //TODO: UI Could Look better!!!!!!!!
            return; 
         }else{
-            //current --; //CHAGNE!!!!!!!!!!
-            DestroyUnit(t);
+            DestroyUnit(t); //TODO: UI Could Look better!!!!!!!!
         }
     }
 
-    void DestroyUnit(Type t){
+    private void DestroyUnit(Type t){
         current--;
         if(current <=0) TypeHandler(t);
     }
 
-    void TypeHandler (Type t){
+    private void TypeHandler (Type t){
+        decrease(); //Decrease the count in the BaseManager.
         type = t;
         switch (type){
             case Type.PLAYER:
+                Debug.Log("become player");
+                BaseManager.instance.PlayerIncrease(this);
                 GetComponent<MeshRenderer>().material = materials[1];
                 growSpeed = 1;
                 break;
             case Type.ENEMY:
+                Debug.Log("become enemy");
+                BaseManager.instance.EnemyIncrease(this);
                 GetComponent<MeshRenderer>().material = materials[2];
-                growSpeed = 2;
+                growSpeed = 1;
+                break;
+        }
+    }
+    private void decrease(){
+        switch (type)
+        {
+            case Type.PLAYER:
+                BaseManager.instance.PlayerDecrease();
+                break;
+            case Type.ENEMY:
+                BaseManager.instance.EnemyDecrease();
+                break;
+            case Type.NEUTRAL:
+                BaseManager.instance.NeuturalDecrease();
                 break;
         }
     }

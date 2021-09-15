@@ -8,12 +8,12 @@ public class GameManager : MonoBehaviour
     void Awake(){
         instance = this;
     }
-    Base sourceBase;
-    Base destBase;
+    private Base sourceBase;
+    private Base destBase;
 
     public void Deploy(Base selectedBase){
-        //SELECT THE SOURCE BASE
-        if(sourceBase ==null&&selectedBase!=null) {
+        //SELECT THE SOURCE BASE, ONLY PlAYER COULD BE SELECTED
+        if(sourceBase ==null && selectedBase!=null && selectedBase.type == Type.PLAYER) {
             sourceBase = selectedBase;
             Debug.Log("1");
             return;

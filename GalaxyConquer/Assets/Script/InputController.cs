@@ -13,8 +13,6 @@ public class InputController : MonoBehaviour
 
             if(Physics.Raycast(ray,out hit)){
                 Base selected = hit.collider.GetComponent<Base>();
-
-                // if(selected.type == Type.PLAYER) 
                 GameManager.instance.Deploy(selected);
             }
         }

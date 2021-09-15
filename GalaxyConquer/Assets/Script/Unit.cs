@@ -11,7 +11,7 @@ public class Unit : MonoBehaviour
     // }
     public Type type;
     Base destination;
-    float speed = 5; //CHAGNE THIS!!!!!!!
+    float speed = 5; //TODO: COULD BE CHAGNED!!!!!!!
     public void setUnit(Type _type, Base destBase, Material material){
         this.type = _type;
         destination = destBase;
@@ -28,7 +28,6 @@ public class Unit : MonoBehaviour
         Base collided = c.GetComponent<Base>();
         if(collided == destination){
             collided.ReceiveUnits(type);
-            Debug.Log("got");
         }
         
     }
