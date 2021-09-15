@@ -126,14 +126,22 @@ public class Base : MonoBehaviour
         }
     }
     public void SendUnits(Base destBase){
+        //NOTE!! BOTH IMPLEMENTATION IS KINDA PROBLEMATIC.
         // int unitAmt = current;
+        // current = 0;
+
+        // Type originalType = type;
+        // Material originalMaterial = GetComponent<MeshRenderer>().material;
+
         // for(int i = 0; i < unitAmt; i++){
-        //     GameObject deployedUnit = Instantiate(unitPrefab);
-        //     deployedUnit.GetComponent<Unit>().setUnit((Unit.Type)type,destBase,
-        //     GetComponent<MeshRenderer>().material);
+        //     GameObject deployedUnit = Instantiate(unitPrefab,transform.position, Quaternion.identity);
+            
+        //     deployedUnit.GetComponent<Unit>().setUnit(originalType, destBase,
+        //     originalMaterial);
+        //    // yield return new WaitForSeconds(0.3f);
+        //     //current--;
+        //     updatePopulation();
         // }
-        // current -= unitAmt;
-        //this.GetComponent<GameObject>().SetActive(true);
         StartCoroutine(SendAllUnits(destBase));
     }
 
