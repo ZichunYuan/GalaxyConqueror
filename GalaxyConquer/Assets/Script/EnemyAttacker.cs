@@ -14,24 +14,36 @@ public class EnemyAttacker : MonoBehaviour
 
         if (time >= interpolationPeriod)
         {
-            Attack();
+            BasicAttack();
             time = 0.0f;
         }
     }
-    private void Attack(){
-        Debug.Log("Attack!");
-        if (BaseManager.instance.enemy.Count > 0 && BaseManager.instance.neutural.Count > 0)
+    private void BasicAttack(){
+        if (PlanetManager.instance.enemy.Count > 0 && PlanetManager.instance.neutural.Count > 0)
         {
-            Base enemy = BaseManager.instance.enemy.Peek();
-            Base neutural = BaseManager.instance.neutural.Peek();
+            Planet enemy = PlanetManager.instance.enemy[0];
+            Planet neutural = PlanetManager.instance.neutural[0];
 
             //TODO: Enemy logic can be changed here!
             if (enemy != null && neutural != null)
             {
                 //Selected enemy source base.
                 //Selected enemy desintaiton base.
-                enemy.SendUnits(neutural);
+                enemy.Attack(neutural);
             }
         }
     }
+    private void AdvancedAttack()
+    {
+        Planet enemy = PlanetManager.instance.enemy[0];
+        Planet neutural = PlanetManager.instance.player[0];
+            //TODO: Enemy logic can be changed here!
+            if (enemy != null && neutural != null)
+            {
+                //Selected enemy source base.
+                //Selected enemy desintaiton base.
+                enemy.Attack(neutural);
+            }
+    }
+
 }

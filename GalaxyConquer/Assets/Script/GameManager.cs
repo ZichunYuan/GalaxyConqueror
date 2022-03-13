@@ -1,6 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -8,20 +9,19 @@ public class GameManager : MonoBehaviour
     void Awake(){
         instance = this;
     }
-    private Base sourceBase;
-    private Base destBase;
+    private Planet sourceBase;
+    private Planet destBase;
 
-    public void Deploy(Base selectedBase){
+    public void Deploy(Planet selectedBase){
+        //TODO: Add Interaction: Highlight?
         //SELECT THE SOURCE BASE, ONLY PlAYER COULD BE SELECTED
         if(sourceBase ==null && selectedBase!=null && selectedBase.type == Type.PLAYER) {
             sourceBase = selectedBase;
-            Debug.Log("1");
             return;
         }
         //DESELECTION
         if(sourceBase==selectedBase||selectedBase==null){
             sourceBase = null;
-            Debug.Log("0");
             return;
         }
 
@@ -29,12 +29,23 @@ public class GameManager : MonoBehaviour
         if(selectedBase!=null && sourceBase!=null){
             destBase = selectedBase;
             //Deploy unit!!!!!
-            sourceBase.SendUnits(destBase);
+            sourceBase.Attack(destBase);
             //Clear 
             sourceBase = null;
             destBase = null;
-            Debug.Log("2");
         }
-        
+    }
+    private void Update()
+    {
+        if (PlanetManager.instance.player.Count == 0)
+        {
+            SceneManager.LoadScene("LoseScene");
+        }
+        if (PlanetManager.instance.enemy.Count == 0)
+        {
+            //TODO: Determine the final win condition.
+            //&& PlanetManager.instance.neutural.Count==0
+            SceneManager.LoadScene("WinScene");
+        }
     }
 }

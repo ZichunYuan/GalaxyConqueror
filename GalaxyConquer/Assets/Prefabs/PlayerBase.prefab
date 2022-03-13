@@ -345,7 +345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitPrefab: {fileID: 6413021649846525874, guid: 6e557cbe82a802442ab496fe91f06387, type: 3}
-  population: {fileID: 3520844021753070372}
+  unitCount: {fileID: 3520844021753070372}
   baseGroup: 0
   type: 1
   materials:

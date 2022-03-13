@@ -12,7 +12,7 @@ public class InputController : MonoBehaviour
             RaycastHit hit;
 
             if(Physics.Raycast(ray,out hit)){
-                Base selected = hit.collider.GetComponent<Base>();
+                Planet selected = hit.collider.GetComponent<Planet>();
                 GameManager.instance.Deploy(selected);
             }
         }
